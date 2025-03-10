@@ -5,7 +5,7 @@ const dashboard = document.querySelector("#ticketContainer"); //Find the contain
 function createTicket (customerName, description, priority) {
         const ticketCard = document.createElement("div");  //creates the metric  card
      
-         ticketCard.setAttribute("id","employeeCard"); //setting attributes:
+         ticketCard.setAttribute("id","ticketCard"); //setting attributes:
          ticketCard.setAttribute("class", "metric-card"); //setting attributes:
          
          //Populate card with title and placeholder value
@@ -27,6 +27,10 @@ function createTicket (customerName, description, priority) {
              if (priority === "High") { //if priority is high then high-priority class is applied to metric card
                 ticketCard.classList.add("high-priority");
              }
+             //Task 5
+             ticketCard.addEventListener('dblclick', () => {
+                enableEditing(ticketCard, customerName, description, priority);
+            });
      };
         //Task 3
     function highlightHighPriority () { //using the highpriority list we select all cards
@@ -39,12 +43,62 @@ function createTicket (customerName, description, priority) {
         })
     }
 
+    //Task 4
     dashboard.addEventListener('click', () => { //added event listener which, on click, logs that
         console.log('Ticket Clicked')    //the ticket was clicked.
     });
 
 
+    //Task 5
+
+// Function to enable editing
+function enableEditing(card, currentCustomerName, currentDescription, currentPriority) {
+    // Replace static content with input fields
+    card.innerHTML = `
+        <input type="text" id="editName" value="${currentCustomerName}" />
+        <input type="text" id="editPosition" value="${currentDescription}" />
+        <input type="text" id="editPriority" value="${currentPriority}" />
+        <button id="saveButton">Save</button>
+    `;
+    
+    // Add event listener to the "Save" button
+    const saveButton = card.querySelector('#saveButton');
+    saveButton.addEventListener('click', () => {
+        const newCustomerName = card.querySelector('#editName').value;
+        const newDescription = card.querySelector('#editPosition').value;
+        const newPriority = card.querySelector('#editPriority').value;
+        disableEditing(card, newCustomerName, newDescription, newPriority); // Save and revert to static text
+    });
+    }
+    
+    // Function to disable editing and update the card
+    function disableEditing(card, newCustomerName, newDescription, newPriority) {
+    // Replace input fields with updated static content
+    card.innerHTML = `
+        <h2>${newCustomerName}</h2>
+        <p>${newDescription}</p>
+        <p>${newPriority}</p>
+    `;
+    
+    // Re-add the "Remove" button
+    const resolveButton = document.createElement('button');
+    resolveButton.innerHTML = 'Remove';
+    card.appendChild(resolveButton);
+    
+    resolveButton.addEventListener('click', () => {
+        dashboard.removeChild(card);
+        event.stopPropagation();
+    });
+    
+    // Re-add the double-click event listener for future edits
+    card.addEventListener('dblclick', () => {
+        enableEditing(card, newCustomerName, newDescription, newPriority);
+    });
+    };
+
 
 createTicket("Mark Garcia", "Computer is bugged out", "Low");
 createTicket("Grark Malinda", "Computer is on fire", "High");
+createTicket("Fade Collins", "Computer is brokey mode ong", "Medium")
+createTicket("Dave Blunts", "Can't put down the cup", "High");
 highlightHighPriority();

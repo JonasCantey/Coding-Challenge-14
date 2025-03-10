@@ -18,6 +18,11 @@ function createTicket (customerName, description, priority) {
              const resolveButton = document.createElement('Button'); //creating a remove button
              resolveButton.innerHTML = 'Resolve'; //inside the remove button is the word remove
              ticketCard.appendChild(resolveButton); //this appends the remove button to the ticket card
+             //Task 4
+             resolveButton.addEventListener('click', () => { //basically says that on click we will remove the 
+                dashboard.removeChild(ticketCard);        //ticketCard from the dashboard
+                event.stopPropagation();    //stopProp makes it so that if you press the remove button
+            });                             //then Ticket Card clicked wont be logged
                 //Task 3
              if (priority === "High") { //if priority is high then high-priority class is applied to metric card
                 ticketCard.classList.add("high-priority");
@@ -33,6 +38,10 @@ function createTicket (customerName, description, priority) {
             card.style.border = "2px solid red";
         })
     }
+
+    dashboard.addEventListener('click', () => { //added event listener which, on click, logs that
+        console.log('Ticket Clicked')    //the ticket was clicked.
+    });
 
 
 
